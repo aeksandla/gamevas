@@ -1,0 +1,91 @@
+name: Publish new version
+
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: 'https://semver.org/lang/ru/ '
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - majore
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+      - name: Setup git
+        run: |
+          git config user.email "pusher-ci@pusher.com"
+          git config user.name "Pusher CI"
+          git fetch
+          git checkout master
+
+      - name: Bump version
+        run: |
+          export NEW_VERSION=$(npm version ${{ github.event.inputs.type }})
+          echo "LIBRARY_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo ${{ env.LIBRARY_VERSION }}
+          echo $( npm show . version )
+
+      - name: Push
+        run: git push
+
+      - name: Prepare tag
+        run: |
+          echo ${{ env.LIBRARY_VERSION }}
+          export TAG=${{ env.LIBRARY_VERSION }}
+          echo "TAG=$TAG" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.TAG }}
+          release_name: ${{ env.TAG }}
+
+  tests:
+    needs: prepare-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: |
+          git fetch
+          git checkout master
+      - run: npm install
+      - run: npm run build
+      - run: npm test
+      - run: npm run codestyle
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+
+  publish-npm:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - run: |
+          git fetch
+          git checkout master
+          git pull
+      - run: npm install
+      - run: npm run build
+
+      - name: Publish stable
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm}}
