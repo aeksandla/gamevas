@@ -1,6 +1,8 @@
 export const ORIGIN_PARAMS = {
-  canvasWidth: 1450,
-  canvasHeight: 1050,
+  canvasWidth: 1420,
+  canvasHeight: 1020,
+  gridCellWidth: 20,
+  gridCellHeight: 20,
   cellWidth: 50,
   cellHeight: 50,
 };

@@ -1,0 +1,14 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "build": "rm -rf ./dist && webpack --watch"
+  },
+  "dependencies": {
+    "go-canvas": "link:../dist"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,5 +1,8 @@
-const runCanvasObject = (changeStateFields: IChangeStateFields) => {
-  return function ({x: toX, y: toY}: { x: number; y: number; }) {
+import { IRunContext } from "./types";
+import {INTERVAL} from "./constants";
+
+const runDiagonal: IRunContext = (changeStateFields) => {
+  return function ({x: toX, y: toY}) {
     if (this._interval) {
       clearInterval(this._interval);
     }
@@ -46,24 +49,8 @@ const runCanvasObject = (changeStateFields: IChangeStateFields) => {
 
         return newState;
       })
-    })
+    }, INTERVAL)
   }
 }
 
-type IWithRun = (CanvasObjectClass: any, changeFields?: IChangeStateFields) => typeof CanvasObjectClass;
-export type IChangeStateFields = ({dX, dY, isLast}: {dX: number; dY: number, isLast?: boolean}) => object;
-/**
- *
- * @param CanvasObjectClass
- * @param changeStateFields
- * @description Класс должен иметь поле _step, стейты x, y
- */
-export const withRun: IWithRun = (CanvasObjectClass, changeStateFields = () => ({})) => {
-  return class CanvasObjectWithHitbox extends CanvasObjectClass {
-    private _interval: NodeJS.Timer | null;
-    constructor(...args: any) {
-      super(...args);
-      this.run = runCanvasObject(changeStateFields).bind(this);
-    }
-  }
-}
+export default runDiagonal;

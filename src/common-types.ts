@@ -22,5 +22,12 @@ export type IDrawRect = ({fillStyle, strokeStyle, x, y, width, height,}:
                               y: number;
                               width: number;
                               height: number;
-                            }) => Path2D
+                            }) => Path2D;
 
+export type NodeType = {cell: Path2D, x: number; y: number; cost: number; id?: string | number; previous?: NodeType};
+
+export type MapType = Record<string, NodeType>;
+
+export enum ECanvasEventType {
+  Click = 'click',
+}

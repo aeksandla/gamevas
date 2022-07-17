@@ -1,8 +1,8 @@
-import {ORIGIN_PARAMS} from "./constants";
+import {ORIGIN_PARAMS} from "../constants";
 import Cell from "./Cell";
 import Canvas from "./Canvas";
 
-class CellsField {
+export class CellsField {
   x = 0;
   y = 0;
   cells;

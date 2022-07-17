@@ -1,4 +1,7 @@
 /node_modules/
-/dist/
 /yarn-error.log
 /.idea
+/build/
+/example/dist/
+/example/node_modules/
+/dist/

@@ -1,21 +1,21 @@
-import Canvas from "../Canvas";
-import Game from "../Game";
+import Canvas from "../components/Canvas";
+import Game from "../components/Game";
 
 function drawObjectWithHitbox(canvas: Canvas) {
   const {
     sprite: {
-      imageX, imageY, realImageWidth, realImageHeight, imageWidth, imageHeight, hitboxWidth, hitboxHeight
+      imageX, imageY, realImageWidth, realImageHeight, imageWidth, imageHeight, hitboxWidth = imageWidth, hitboxHeight = imageHeight
     }, x, y
   } = this.state;
   this.object = canvas.drawRect({
     fillStyle: 'transparent',
-    strokeStyle: 'transparent',
-    x: x + imageWidth * Game.ratio / 2 - hitboxWidth * Game.ratio / 2,
-    y: y + imageHeight * Game.ratio / 2 - hitboxHeight * Game.ratio / 2,
-    width: hitboxWidth * Game.ratio,
-    height: hitboxHeight * Game.ratio,
+    strokeStyle: Game.isShowHitbox ? this.gridColor : 'transparent',
+    x: x + imageWidth / 2 - hitboxWidth / 2,
+    y: y + imageHeight / 2 - hitboxHeight / 2,
+    width: hitboxWidth,
+    height: hitboxHeight,
   });
-  canvas.drawImage(this._sprite, imageX, imageY, realImageWidth, realImageHeight, x, y, imageWidth * Game.ratio, imageHeight * Game.ratio);
+  canvas.drawImage(this._sprite, imageX, imageY, realImageWidth, realImageHeight, x, y, imageWidth, imageHeight);
 }
 
 type IWithHitbox = (CanvasObjectClass: any) => typeof CanvasObjectClass;
@@ -25,7 +25,7 @@ type IWithHitbox = (CanvasObjectClass: any) => typeof CanvasObjectClass;
  * @param CanvasObjectClass
  * @description Класс должен иметь поле _sprite, стейт sprite со свойствами imageX, imageY, realImageWidth, realImageHeight, imageWidth, imageHeight, hitboxWidth, hitboxHeight
  */
-export const withHitbox: IWithHitbox = (CanvasObjectClass,) => {
+export const withHitbox: IWithHitbox = (CanvasObjectClass) => {
   return class CanvasObjectWithHitbox extends CanvasObjectClass {
 
     constructor(...args: any) {

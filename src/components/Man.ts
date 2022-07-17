@@ -1,31 +1,34 @@
 import {CanvasObject} from "./GameObject";
-import sprite from './images/man.png';
-import {withRun, withHitbox, IChangeStateFields} from "./HOCs";
+import sprite from '../images/man.png';
+import {ERunType, IChangeStateFields, withHitbox, withRun} from "../HOCs/index";
+import {ORIGIN_PARAMS} from "../constants";
 
 const manSprite = new Image(935, 1133);
 manSprite.src = sprite;
 
 const manStaticValues = {
-  imageWidth: 233.75 / 2,
-  imageHeight: 283.25 / 2,
+  imageWidth: Math.round(233.75 / 2 / ORIGIN_PARAMS.gridCellWidth),
+  imageHeight: Math.round(283.25 / 2 / ORIGIN_PARAMS.gridCellHeight),
   realImageWidth: 233.75,
   realImageHeight: 283.25,
-  hitboxWidth: 100,
-  hitboxHeight: 100,
+  hitboxWidth: Math.round(233.75 / 2 / ORIGIN_PARAMS.gridCellWidth),
+  hitboxHeight: Math.round(283.25 / 2 / ORIGIN_PARAMS.gridCellHeight),
 };
 
-class Man extends CanvasObject {
-  private _step = 1.3;
+class _Man extends CanvasObject {
+  private _step = 1;
   private _sprite = manSprite;
+  gridColor = 'red';
 
   constructor({x, y}: { x: number; y: number; }) {
     super();
+    this.id = `man`
     this.state = {
       x,
       y,
       sprite: {
-        imageX: 0,
-        imageY: 0,
+        imageX: x,
+        imageY: y,
         ...manStaticValues
       },
     };
@@ -56,10 +59,14 @@ const setView: () => IChangeStateFields = () => {
     else currentState++
     if (dX > 0) {
       return toRight[currentState];
-    } else {
+    } else if (dX < 0) {
       return toLeft[currentState];
+    } else {
+      return {sprite: {imageX: 0, imageY: 0, ...manStaticValues}}
     }
   }
 }
+const ManWithHitbox = withHitbox(_Man);
+export const Man = withRun(ERunType.SmartCathet, setView())(ManWithHitbox);
 
-export default withRun(withHitbox(Man), setView());
+export default Man;

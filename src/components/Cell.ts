@@ -1,6 +1,6 @@
 import {CanvasObject} from "./GameObject";
-import {ActionTypes} from "./types";
-import {BACKGROUND} from "./constants";
+import {ActionTypes} from "../common-types";
+import {BACKGROUND} from "../constants";
 import Canvas from "./Canvas";
 
 const CELL_VIEWS = {
@@ -15,7 +15,7 @@ const CELL_VIEWS = {
   }
 };
 
-class Cell extends CanvasObject<{currentView: keyof typeof CELL_VIEWS}> {
+export class Cell extends CanvasObject<{currentView: keyof typeof CELL_VIEWS}> {
   static height: number;
   static width: number;
   x;

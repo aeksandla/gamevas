@@ -1,31 +1,44 @@
-import {ActionCallbackType, ActionTypes, ICanvasDrawImage, IDrawRect} from "./types";
-import {BACKGROUND, ORIGIN_PARAMS} from "./constants";
-import {
-  CanvasObject,
-  CanvasObjectSetState, CanvasObjectSetStateCb,
-} from "./GameObject";
+import {ActionCallbackType, ECanvasEventType, ICanvasDrawImage, IDrawRect} from "../common-types";
+import {ORIGIN_PARAMS} from "../constants";
+import {CanvasObject} from "./GameObject";
+import Grid from "./Grid";
+import Game from "./Game";
 
-class Canvas {
+export class Canvas {
   canvas: HTMLCanvasElement;
   context;
   canvasWidth: number;
   canvasHeight: number;
   private objects: any[] = [];
+  private isRerender = true;
+  grid: Grid;
 
   constructor(id: string) {
     this.canvas = <HTMLCanvasElement>document.getElementById(id);
     if (!this.canvas) throw new Error('Canvas не найден');
-
     this.context = this.canvas.getContext('2d');
-
-    const {height, width} = Canvas.calcCanvasSize();
-
-    this.setCanvasSize(width, height);
+    this.setCanvasSize();
+    this.grid = new Grid();
+    this.setObject(this.grid);
+    this.render();
     // this.setEventListeners();
   }
 
-  setObject = (object: CanvasObject) => {
+  render = () => {
+    const main = (timestamp: number) => {
+      if (this.isRerender) {
+        this.drawObjects();
+        this.updateMap();
+        this.isRerender = false;
+      }
+      requestAnimationFrame(main);
+    }
+    main(0);
+  }
+
+  setObject = <TBase extends CanvasObject>(object: TBase) => {
     this.objects.push(object);
+    object.map = this.grid.cells;
     object.setState = (arg) => {
       if (object.isCb(arg)) {
         object.state = {
@@ -38,19 +51,36 @@ class Canvas {
           ...arg,
         }
       }
-      this.drawObjects();
+      this.isRerender = true;
     };
-    this.drawObjects();
+    this.isRerender = true;
 
     // object.addEventListener = (type: ActionTypes, cb: ActionCallbackType) => {
     //   object.listeners[type] = cb;
     // }
   };
 
+  updateMap = () => {
+    this.grid.draw(this);
+    this.objects.forEach(object => {
+      if (object.state?.sprite?.hitboxWidth && object.state?.sprite?.hitboxHeight && object.state.x && object.state.y) {
+        for (let x = 0; x < object.state.sprite.hitboxWidth; x++) {
+          for (let y = 0; y < object.state.sprite.hitboxHeight; y++){
+            const currentX = object.state.x + x;
+            const currentY = object.state.y + y;
+            this.grid.updateCell(currentX, currentY, {x: currentX, y: currentY, cost: Infinity, id: object.id}, this, object.gridColor);
+          }
+        }
+      }
+    })
+
+  }
+
   removeObject = (object: any) => {
     object.setState = () => {};
     this.objects = this.objects.filter(o => o !== object);
-    this.drawObjects();
+    this.isRerender = true;
+    this.updateMap();
   }
 
   private drawObjects = () => {
@@ -79,45 +109,25 @@ class Canvas {
   //   });
   // }
 
-  private setCanvasSize(width: number, height: number) {
-    this.canvas.width = width;
-    this.canvas.height = height;
-    this.canvasHeight = height;
-    this.canvasWidth = width;
-  }
-
-  private static calcCanvasSize() {
+  private setCanvasSize() {
     const windowWidth = document.documentElement.clientWidth;
     const windowHeight = document.documentElement.clientHeight;
+    this.canvas.width = ORIGIN_PARAMS.canvasWidth;
+    this.canvas.height = ORIGIN_PARAMS.canvasHeight;
 
-    let canvasWidth, canvasHeight;
-    canvasWidth = windowWidth;
-    canvasHeight = windowWidth * ORIGIN_PARAMS.canvasHeight / ORIGIN_PARAMS.canvasWidth;
+    this.canvas.style.width = '100%';
+    this.canvas.style.height = 'auto';
 
-
-    if (canvasHeight > windowHeight) {
-      const dif = canvasHeight - windowHeight;
-      const difPercent = dif / canvasHeight;
-      canvasHeight = canvasHeight * (1 - difPercent);
-      canvasWidth = canvasWidth * (1 - difPercent);
-    }
-
-    if (canvasWidth > windowWidth) {
-      const dif = canvasWidth - windowWidth;
-      const difPercent = dif / canvasWidth;
-      canvasWidth = canvasWidth * (1 - difPercent);
-      canvasHeight = canvasHeight * (1 - difPercent);
-    }
-
-    return {height: canvasHeight, width: canvasWidth}
+    this.canvasWidth = ORIGIN_PARAMS.canvasWidth;
+    this.canvasHeight = ORIGIN_PARAMS.canvasHeight;
   }
 
-  drawRect: IDrawRect = ({fillStyle = 'none', strokeStyle = 'none', x, y, width, height,}) => {
+  drawRect: IDrawRect = ({fillStyle = 'transparent', strokeStyle = 'transparent', x, y, width, height}) => {
     const object = new Path2D();
     this.context.fillStyle = fillStyle;
     this.context.strokeStyle = strokeStyle;
 
-    object.rect(x, y, width, height);
+    object.rect(x * this.grid.width, y * this.grid.height, width * this.grid.width, height * this.grid.height);
 
     this.context.stroke(object);
     this.context.fill(object);
@@ -126,7 +136,7 @@ class Canvas {
   }
 
   drawImage: ICanvasDrawImage = (image, sx, sy, sw, sh, dx, dy, dw, dh) => {
-    this.context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+    this.context.drawImage(image, sx, sy, sw, sh, dx * this.grid.width, dy * this.grid.height, dw * this.grid.width, dh * this.grid.height);
   }
 
   // objectEvents = {
@@ -157,6 +167,17 @@ class Canvas {
   //     }
   //   },
   // }
+
+  addEventListener = (type: ECanvasEventType, listener: (e: {naturalEvent: Event, x: number, y: number}) => void) => {
+    switch (type) {
+      case ECanvasEventType.Click: {
+        this.canvas.addEventListener('click', (e) => {
+          listener({naturalEvent: e, x: Math.floor(e.x * Game.scale / this.grid.width), y: Math.floor(e.y * Game.scale / this.grid.height)});
+        })
+        break;
+      }
+    }
+  }
 }
 
 export default Canvas;

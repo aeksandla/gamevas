@@ -1,20 +1,22 @@
 {
   "name": "go-canvas",
   "version": "0.0.0",
-  "main": "index.js",
   "dependencies": {
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.3.0",
     "typescript": "^4.6.3",
+    "url-loader": "^4.1.1",
     "webpack": "^5.72.0"
   },
   "scripts": {
-    "build": "rm -rf ./dist && webpack",
-    "build-ts": "node node_modules/typescript/bin/tsc",
-    "watch-ts": "node node_modules/typescript/bin/tsc --watch && browser-sync start"
+    "build": "rm -rf ./dist && webpack --config ./webpack/webpack.config --watch",
+    "build-ts": "rm -rf ./dist && yarn build-ts:clear && yarn build-ts:tsc",
+    "watch-ts": "node node_modules/typescript/bin/tsc --watch && browser-sync start",
+    "test": "echo '^_^ Run test script'",
+    "codestyle": "echo '-_- Run codestyle script'"
   },
   "devDependencies": {
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.10.0"
   },
   "repository": {
     "type": "git",
