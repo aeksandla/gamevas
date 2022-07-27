@@ -1,7 +1,7 @@
 import {CanvasObject} from "./GameObject";
 import {ORIGIN_PARAMS} from "../constants";
 import Canvas from "./Canvas";
-import {IDrawRect, MapType, NodeType} from "../common-types";
+import {MapType, NodeType} from "../common-types";
 import {getMapKey} from "../utils";
 import Game from "./Game";
 
@@ -20,41 +20,31 @@ export class Grid extends CanvasObject {
     this.cells[getMapKey(x, y)] = {...this.cells[getMapKey(x, y)], ...data}
     if (Game.isShowHitboxGrid) {
       this.drawCell(canvas)({
-        x: x * this.width,
-        y: y * this.height,
-        width: this.width,
-        height: this.height,
+        x: x,
+        y: y,
         strokeStyle: gridColor,
       });
     }
   }
 
-  drawCell = (canvas: Canvas): IDrawRect => (params) => {
+  drawCell = (canvas: Canvas) => (params: {x: number; y: number, strokeStyle?: string}) => {
     const object = new Path2D();
     canvas.context.fillStyle = 'transparent';
-    canvas.context.strokeStyle = params.strokeStyle || (Game.isShowGrid ? '#8292ff' : 'transparent');
-
-    object.rect(params.x, params.y, params.width, params.height);
-
+    canvas.context.strokeStyle = params.strokeStyle || '#8292ff';
+    object.rect(params.x * this.width, params.y * this.height, this.width, this.height);
     canvas.context.stroke(object);
     canvas.context.fill(object);
-
-    return object;
   }
 
   draw = (canvas: Canvas) => {
     const xCount = ORIGIN_PARAMS.canvasWidth / ORIGIN_PARAMS.gridCellWidth;
     const yCount = ORIGIN_PARAMS.canvasHeight / ORIGIN_PARAMS.gridCellHeight;
-    const drawCell = this.drawCell(canvas);
     for (let x = 0; x < xCount; x++) {
       for (let y = 0; y < yCount; y++) {
+        if (Game.isShowGrid) {
+          this.drawCell(canvas)({x, y});
+        }
         this.cells[getMapKey(x, y)] = {
-          cell: drawCell({
-            x: this.width * x,
-            y: this.height * y,
-            width: this.width,
-            height: this.height,
-          }),
           x,
           y,
           cost: 0,

@@ -1,31 +1,32 @@
 import {CanvasObject} from "./GameObject";
 import sprite from '../images/man.png';
 import {ERunType, IChangeStateFields, withHitbox, withRun} from "../HOCs/index";
-import {ORIGIN_PARAMS} from "../constants";
 
 const manSprite = new Image(935, 1133);
 manSprite.src = sprite;
 
 const manStaticValues = {
-  imageWidth: Math.round(233.75 / 2 / ORIGIN_PARAMS.gridCellWidth),
-  imageHeight: Math.round(283.25 / 2 / ORIGIN_PARAMS.gridCellHeight),
+  imageWidth: 6,
+  imageHeight: 7,
   realImageWidth: 233.75,
   realImageHeight: 283.25,
-  hitboxWidth: Math.round(233.75 / 2 / ORIGIN_PARAMS.gridCellWidth),
-  hitboxHeight: Math.round(283.25 / 2 / ORIGIN_PARAMS.gridCellHeight),
+  hitboxWidth: 3,
+  hitboxHeight: 1,
+  hitboxTop: 6,
+  hitboxLeft: 1,
 };
 
 class _Man extends CanvasObject {
-  private _step = 1;
-  private _sprite = manSprite;
+  step = 1;
+  sprite = manSprite;
   gridColor = 'red';
 
   constructor({x, y}: { x: number; y: number; }) {
     super();
     this.id = `man`
     this.state = {
-      x,
-      y,
+      x: x,
+      y: y,
       sprite: {
         imageX: x,
         imageY: y,
@@ -49,6 +50,20 @@ const toRight = [
   {sprite: {imageX: 701.25, imageY: 849.75, ...manStaticValues}},
 ]
 
+const toTop = [
+  {sprite: {imageX: 0, imageY: 283.25, ...manStaticValues}},
+  {sprite: {imageX: 233.75, imageY: 283.25, ...manStaticValues}},
+  {sprite: {imageX: 467.5, imageY: 283.25, ...manStaticValues}},
+  {sprite: {imageX: 701.25, imageY: 283.25, ...manStaticValues}},
+]
+
+const toBottom = [
+  {sprite: {imageX: 0, imageY: 0, ...manStaticValues}},
+  {sprite: {imageX: 233.75, imageY: 0, ...manStaticValues}},
+  {sprite: {imageX: 467.5, imageY: 0, ...manStaticValues}},
+  {sprite: {imageX: 701.25, imageY: 0, ...manStaticValues}},
+]
+
 const setView: () => IChangeStateFields = () => {
   let currentState = -1;
   return ({dX, dY, isLast}) => {
@@ -62,6 +77,11 @@ const setView: () => IChangeStateFields = () => {
     } else if (dX < 0) {
       return toLeft[currentState];
     } else {
+      if (dY < 0) {
+        return toTop[currentState]
+      } else if (dY > 0) {
+       return toBottom[currentState];
+      }
       return {sprite: {imageX: 0, imageY: 0, ...manStaticValues}}
     }
   }

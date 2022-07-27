@@ -12,7 +12,7 @@ import runSmartCathet from "./runSmartCathet";
 export const withRun = <TBase extends Constructor>(type: ERunType = ERunType.Diagonal, changeStateFields?: IChangeStateFields) =>
   /**
    *
-   * @param CanvasObjectClass - Класс должен иметь поле _step, стейты x, y
+   * @param CanvasObjectClass - Класс должен иметь поле step, стейты x, y
    */
   (CanvasObjectClass: TBase) => class CanvasObjectWithRun extends CanvasObjectClass {
     _interval: NodeJS.Timer | null = null;

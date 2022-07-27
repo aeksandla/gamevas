@@ -1,4 +1,6 @@
 const path = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
+
 const getEntries = require('./entries');
 
 const root = path.join(__dirname, '..');
@@ -6,13 +8,9 @@ console.log(root);
 module.exports = {
   mode: 'production',
   entry: getEntries(path.join(root, 'src'), ''),
-  // output: {
-  //   path: path.join(root, 'dist'),
-  //   filename: '[name].[contenthash].js',
-  // },
   output: {
     path: path.join(root, 'dist'),
-    filename: '[name].js', // если написать someName.[name] содержимое библиотеки окажется в одном объекте someName
+    filename: '[name].js',
     libraryTarget: 'commonjs',
     assetModuleFilename: 'images/[name][ext]',
   },
@@ -22,6 +20,13 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {from: path.join(root, 'types.d.ts'), to: path.join(root, 'dist', 'types.d.ts')},
+      ],
+    }),
+  ],
   module: {
     rules: [
       {
@@ -39,7 +44,6 @@ module.exports = {
           },
           ],
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        // type: 'asset/resource',
       },
     ],
   },

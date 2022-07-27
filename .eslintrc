@@ -1,0 +1,58 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "rules": {
+    "eol-last": 2,
+    "camelcase": [
+      2,
+      {
+        "properties": "always"
+      }
+    ],
+    "comma-dangle": [
+      2,
+      "always-multiline"
+    ],
+    "constructor-super": 2,
+    "arrow-body-style": [
+      2,
+      "as-needed"
+    ],
+    "comma-spacing": [
+      2,
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "indent": [
+      2,
+      4
+    ],
+    "arrow-parens": [
+      2,
+      "always"
+    ],
+    "no-multi-spaces": 2,
+    "curly": 2,
+    "spaced-comment": 0,
+    "jsx-quotes": [
+      2,
+      "prefer-single"
+    ],
+    "dot-location": [
+      2,
+      "property"
+    ],
+    "valid-jsdoc": 1,
+    "arrow-spacing": [
+      2,
+      {
+        "before": true,
+        "after": true
+      }
+    ]
+  }
+}

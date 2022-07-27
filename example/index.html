@@ -13,9 +13,20 @@
         top: 0;
         left: 0;
     }
+    .canvases {
+        position: relative;
+    }
 </style>
 <body>
-<canvas id="background-canvas"></canvas>
-<canvas id="man-canvas"></canvas>
+<form name="form">
+    <input type="radio" value="1" name="man" checked>
+    <input type="radio" value="2" name="man">
+    <input type="radio" value="3" name="man">
+    <input type="radio" value="4" name="man">
+</form>
+<div class="canvases">
+    <canvas id="background-canvas"></canvas>
+    <canvas id="man-canvas"></canvas>
+</div>
 </body>
 </html>

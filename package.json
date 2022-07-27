@@ -13,10 +13,12 @@
     "build-ts": "rm -rf ./dist && yarn build-ts:clear && yarn build-ts:tsc",
     "watch-ts": "node node_modules/typescript/bin/tsc --watch && browser-sync start",
     "test": "echo '^_^ Run test script'",
-    "codestyle": "echo '-_- Run codestyle script'"
+    "codestyle": "eslint --ext .js,.jsx,.ts,.tsx ."
   },
   "devDependencies": {
-    "webpack-cli": "^4.10.0"
+    "copy-webpack-plugin": "^11.0.0",
+    "webpack-cli": "^4.10.0",
+    "eslint": "^8.20.0"
   },
   "repository": {
     "type": "git",

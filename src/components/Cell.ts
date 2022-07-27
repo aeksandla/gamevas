@@ -1,6 +1,4 @@
 import {CanvasObject} from "./GameObject";
-import {ActionTypes} from "../common-types";
-import {BACKGROUND} from "../constants";
 import Canvas from "./Canvas";
 
 const CELL_VIEWS = {

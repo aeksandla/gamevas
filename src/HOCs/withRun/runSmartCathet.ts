@@ -5,6 +5,9 @@ import {IRunContext} from "./types";
 
 const runSmartCathet: IRunContext = (changeStateFields) => {
   return function ({x: toX, y: toY}) {
+    if (this._interval) {
+      clearInterval(this._interval);
+    }
 
     const path = findPath.call(this, {x: this.state.x, y: this.state.y, cost: 0}, {x: toX, y: toY, cost: 0})
     let currentIndex = path.length - 1;
@@ -31,7 +34,6 @@ const runSmartCathet: IRunContext = (changeStateFields) => {
 
 function findPath(startNode: NodeType, endNode: NodeType) {
   console.log('findPath');
-  const map = this.map;
   let reachable: MapType = {[getMapKey(startNode.x, startNode.y)]: startNode};
   const explored: MapType = {};
 
@@ -47,7 +49,7 @@ function findPath(startNode: NodeType, endNode: NodeType) {
     explored[nodeKey] = node;
     delete reachable[nodeKey];
 
-    const newReachable: MapType = omitNodes(getAdjacentNodes(node, map, this._step, this.state.sprite.hitboxWidth, this.state.sprite.hitboxHeight, this.id), explored);
+    const newReachable: MapType = omitNodes(getAdjacentNodes.call(this, node), explored);
     for (const adjacentKey in newReachable) {
       if (!reachable[adjacentKey]) {
         newReachable[adjacentKey].previous = node;
@@ -65,33 +67,34 @@ function findPath(startNode: NodeType, endNode: NodeType) {
   return [];
 }
 
-const getAdjacentNodes = (node: NodeType, map: MapType, step: number, width: number, height: number, id: number | string) => {
+function getAdjacentNodes(node: NodeType) {
+  const isExistPoint = (x: number, y: number) => !!this.map[getMapKey(x, y)];
+  const isOwnPoints = (x: number, y: number) => this.map[getMapKey(x, y)].id === this.id;
+  const isInfinity = (x: number, y: number) => this.map[getMapKey(x, y)].cost === Infinity;
+
   const nodes: MapType = {};
   for (let x = -1; x <= 1; x++) {
     for (let y = -1; y <= 1; y++) {
       if (x === 0 && y === 0) continue;
       const itemX = node.x + x;
       const itemY = node.y + y;
-
-      const isExistPoint = (x: number, y: number) => !!map[getMapKey(x, y)];
-      const isOwnPoints = (x: number, y: number) => map[getMapKey(x, y)].id === id;
-      const isInfinity = (x: number, y: number) => map[getMapKey(x, y)].cost === Infinity;
-
       let isAllow = true;
-      for (let oX = 0; oX <= width; oX++) {
-        for (let oY = 0; oY <= height; oY++) {
-          if (!isExistPoint(itemX + oX, itemY + oY)) {
+      for (let oX = 0; oX < this.state.sprite.hitboxWidth; oX++) {
+        for (let oY = 0; oY < this.state.sprite.hitboxHeight; oY++) {
+          const xInObjectWidth = itemX + oX;
+          const yInObjectHeight = itemY + oY;
+          if (!isExistPoint(xInObjectWidth, yInObjectHeight)) {
             isAllow = false;
             continue;
           }
-          if (isInfinity(itemX + oX, itemY + oY) && !isOwnPoints(itemX + oX, itemY + oY)) {
+          if (isInfinity(xInObjectWidth, yInObjectHeight) && !isOwnPoints(xInObjectWidth, yInObjectHeight)) {
             isAllow = false;
           }
         }
       }
 
       if (isAllow) {
-        nodes[getMapKey(itemX, itemY)] = {...map[getMapKey(itemX, itemY)], cost: 0};
+        nodes[getMapKey(itemX, itemY)] = {...this.map[getMapKey(itemX, itemY)], cost: 0};
       }
     }
   }

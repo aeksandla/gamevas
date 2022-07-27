@@ -1,4 +1,11 @@
-import {ActionCallbackType, ECanvasEventType, ICanvasDrawImage, IDrawRect} from "../common-types";
+import {
+  ActionCallbackType,
+  ActionTypes,
+  ECanvasEventType,
+  ICanvasDrawImage,
+  IDrawEllipse,
+  IDrawRect
+} from "../common-types";
 import {ORIGIN_PARAMS} from "../constants";
 import {CanvasObject} from "./GameObject";
 import Grid from "./Grid";
@@ -20,8 +27,8 @@ export class Canvas {
     this.setCanvasSize();
     this.grid = new Grid();
     this.setObject(this.grid);
+    this.enableEventListeners();
     this.render();
-    // this.setEventListeners();
   }
 
   render = () => {
@@ -34,6 +41,25 @@ export class Canvas {
       requestAnimationFrame(main);
     }
     main(0);
+  }
+
+  enableEventListeners = () => {
+    this.canvas.addEventListener('mousedown', (e) => {
+      this.objects.forEach(object => {
+        if (object.listeners[ActionTypes.MouseDown]) this.objectEvents[ActionTypes.MouseDown](object, e);
+      })
+    });
+    this.canvas.addEventListener('mouseup', (e) => {
+      this.objects.forEach(object => {
+        if (object.listeners[ActionTypes.MouseUp]) this.objectEvents[ActionTypes.MouseUp](object, e);
+      })
+    });
+    this.canvas.addEventListener('mousemove', (e) => {
+      this.objects.forEach(object => {
+        if (object.listeners[ActionTypes.MouseOver]) this.objectEvents[ActionTypes.MouseOver](object, e);
+        if (object.listeners[ActionTypes.MouseOut]) this.objectEvents[ActionTypes.MouseOut](object, e);
+      })
+    });
   }
 
   setObject = <TBase extends CanvasObject>(object: TBase) => {
@@ -54,26 +80,28 @@ export class Canvas {
       this.isRerender = true;
     };
     this.isRerender = true;
-
-    // object.addEventListener = (type: ActionTypes, cb: ActionCallbackType) => {
-    //   object.listeners[type] = cb;
-    // }
   };
 
   updateMap = () => {
     this.grid.draw(this);
     this.objects.forEach(object => {
-      if (object.state?.sprite?.hitboxWidth && object.state?.sprite?.hitboxHeight && object.state.x && object.state.y) {
-        for (let x = 0; x < object.state.sprite.hitboxWidth; x++) {
-          for (let y = 0; y < object.state.sprite.hitboxHeight; y++){
-            const currentX = object.state.x + x;
-            const currentY = object.state.y + y;
+      if (object.state?.sprite?.hitboxWidth && object.state?.sprite?.hitboxHeight && object.state.x !== undefined && object.state.y !== undefined) {
+        const {sprite: {
+          hitboxWidth,
+          hitboxHeight,
+        },
+        x: objectX,
+        y: objectY,
+        } = object.state;
+        for (let x = 0; x < hitboxWidth; x++) {
+          for (let y = 0; y < hitboxHeight; y++){
+            const currentX = objectX + x;
+            const currentY = objectY + y;
             this.grid.updateCell(currentX, currentY, {x: currentX, y: currentY, cost: Infinity, id: object.id}, this, object.gridColor);
           }
         }
       }
     })
-
   }
 
   removeObject = (object: any) => {
@@ -90,28 +118,7 @@ export class Canvas {
     });
   }
 
-  // private setEventListeners = () => {
-  //   this.objects.forEach(object => {
-  //       Object.entries(object.listeners).forEach(([type, cb]: [ActionTypes, ActionCallbackType]) => {
-  //         switch (type) {
-  //           case ActionTypes.MouseDown:
-  //             return this.canvas.addEventListener('mousedown', (e) => this.objectEvents.mousedown(object, e));
-  //           case ActionTypes.MouseUp:
-  //             return this.canvas.addEventListener('mouseup', (e) => this.objectEvents.mouseup(object, e));
-  //           case ActionTypes.MouseOver:
-  //             return this.canvas.addEventListener('mousemove', (e) => this.objectEvents.mouseover(object, e));
-  //           case ActionTypes.MouseOut:
-  //             return this.canvas.addEventListener('mousemove', (e) => this.objectEvents.mouseout(object, e));
-  //           default:
-  //             break;
-  //         }
-  //       })
-  //   });
-  // }
-
   private setCanvasSize() {
-    const windowWidth = document.documentElement.clientWidth;
-    const windowHeight = document.documentElement.clientHeight;
     this.canvas.width = ORIGIN_PARAMS.canvasWidth;
     this.canvas.height = ORIGIN_PARAMS.canvasHeight;
 
@@ -135,44 +142,63 @@ export class Canvas {
     return object;
   }
 
+  drawEllipse: IDrawEllipse = ({fillStyle = 'transparent', strokeStyle = 'transparent', x, y, radiusX, radiusY = radiusX, rotation, counterclockwise, startAngle, endAngle}) => {
+    const object = new Path2D();
+    this.context.fillStyle = fillStyle;
+    this.context.strokeStyle = strokeStyle;
+
+    object.ellipse(x * this.grid.width, y * this.grid.height, radiusX * this.grid.width, radiusY * this.grid.height, rotation, startAngle, endAngle, counterclockwise);
+
+    this.context.stroke(object);
+    this.context.fill(object);
+
+    return object;
+  }
+
   drawImage: ICanvasDrawImage = (image, sx, sy, sw, sh, dx, dy, dw, dh) => {
     this.context.drawImage(image, sx, sy, sw, sh, dx * this.grid.width, dy * this.grid.height, dw * this.grid.width, dh * this.grid.height);
   }
 
-  // objectEvents = {
-  //   mousedown: (object: CanvasObject, e: MouseEvent) => {
-  //     const isMouseDown = this.context.isPointInPath(object.object, e.x, e.y);
-  //     if (isMouseDown) {
-  //       object.listeners[ActionTypes.MouseDown](e);
-  //     }
-  //   },
-  //   mouseup: (object: CanvasObject, e: MouseEvent) => {
-  //     const isMouseUp = this.context.isPointInPath(object.object, e.x, e.y);
-  //     if (isMouseUp) {
-  //       object.listeners[ActionTypes.MouseUp](e);
-  //     }
-  //   },
-  //   mouseover: (object: CanvasObject, e: MouseEvent) => {
-  //     const isMouseOver = this.context.isPointInPath(object.object, e.x, e.y) && !object.isOver;
-  //     if (isMouseOver) {
-  //       object.isOver = true;
-  //       object.listeners[ActionTypes.MouseOver](e);
-  //     }
-  //   },
-  //   mouseout: (object: CanvasObject, e: MouseEvent) => {
-  //     const isMouseOut = !this.context.isPointInPath(object.object, e.x, e.y) && object.isOver;
-  //     if (isMouseOut) {
-  //       object.isOver = false;
-  //       object.listeners[ActionTypes.MouseOut](e);
-  //     }
-  //   },
-  // }
+  objectEvents = {
+    mousedown: (object: CanvasObject, e: MouseEvent) => {
+      const isMouseDown = this.context.isPointInPath(object.object, this.getCoordinate(e, 'x'), this.getCoordinate(e, 'y'));
+      if (isMouseDown) {
+        object.listeners[ActionTypes.MouseDown](e);
+      }
+    },
+    mouseup: (object: CanvasObject, e: MouseEvent) => {
+      const isMouseUp = this.context.isPointInPath(object.object, this.getCoordinate(e, 'x'), this.getCoordinate(e, 'y'));
+      if (isMouseUp) {
+        object.listeners[ActionTypes.MouseUp](e);
+      }
+    },
+    mouseover: (object: CanvasObject, e: MouseEvent) => {
+      const isMouseOver = this.context.isPointInPath(object.object, this.getCoordinate(e, 'x'), this.getCoordinate(e, 'y')) && !object.isOver;
+      if (isMouseOver) {
+        console.log('mouseover');
+        object.isOver = true;
+        object.listeners[ActionTypes.MouseOver](e);
+      }
+    },
+    mouseout: (object: CanvasObject, e: MouseEvent) => {
+      const isMouseOut = !this.context.isPointInPath(object.object, this.getCoordinate(e, 'x'), this.getCoordinate(e, 'y')) && object.isOver;
+      if (isMouseOut) {
+        console.log('mouseout');
+        object.isOver = false;
+        object.listeners[ActionTypes.MouseOut](e);
+      }
+    },
+  }
+
+  getCoordinate = (e: MouseEvent, type: 'x' | 'y') => {
+    return (e[type] - this.canvas.getBoundingClientRect()[type]) * Game.scale;
+  }
 
   addEventListener = (type: ECanvasEventType, listener: (e: {naturalEvent: Event, x: number, y: number}) => void) => {
     switch (type) {
       case ECanvasEventType.Click: {
         this.canvas.addEventListener('click', (e) => {
-          listener({naturalEvent: e, x: Math.floor(e.x * Game.scale / this.grid.width), y: Math.floor(e.y * Game.scale / this.grid.height)});
+          listener({naturalEvent: e, x: Math.floor(this.getCoordinate(e, 'x') / this.grid.width), y: Math.floor(this.getCoordinate(e, 'y') / this.grid.height)});
         })
         break;
       }
