@@ -14,7 +14,7 @@ jobs:
           node-version: '14'
 
       - run: cd example && yarn
-      - run: mkdir public && cd dist && cp *.* ../public
+      - run: cd example && mkdir public && cd dist && cp *.* ../public
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
