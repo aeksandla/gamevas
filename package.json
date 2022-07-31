@@ -1,5 +1,5 @@
 {
-  "name": "go-canvas",
+  "name": "canvas-game-builder",
   "version": "0.0.1",
   "scripts": {
     "build": "rm -rf ./dist && webpack --config ./webpack/webpack.config",
