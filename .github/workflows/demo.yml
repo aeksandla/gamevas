@@ -14,10 +14,11 @@ jobs:
           node-version: '14'
 
       - run: cd example && yarn
+      - run: mkdir public && cd dist && cp *.* ../public
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./example/dist
+          publish_dir: ./example/public
           exclude_assets: ''
