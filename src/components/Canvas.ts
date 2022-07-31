@@ -1,5 +1,4 @@
 import {
-  ActionCallbackType,
   ActionTypes,
   ECanvasEventType,
   ICanvasDrawImage,
@@ -32,7 +31,7 @@ export class Canvas {
   }
 
   render = () => {
-    const main = (timestamp: number) => {
+    const main = (_: number) => {
       if (this.isRerender) {
         this.drawObjects();
         this.updateMap();

@@ -34,7 +34,7 @@ const runSmartCathet: IRunContext = (changeStateFields) => {
 
 function findPath(startNode: NodeType, endNode: NodeType) {
   console.log('findPath');
-  let reachable: MapType = {[getMapKey(startNode.x, startNode.y)]: startNode};
+  const reachable: MapType = {[getMapKey(startNode.x, startNode.y)]: startNode};
   const explored: MapType = {};
 
   while (Object.keys(reachable).length) {

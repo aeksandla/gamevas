@@ -6,12 +6,6 @@ export type CanvasActionsType = {
 
 export type ActionCallbackType = (e: Event) => void;
 
-interface IGameObjectActions extends Record<ActionTypes, string> {
-}
-
-interface IGameObject extends IGameObjectActions {
-}
-
 export type ICanvasDrawImage = (image: CanvasImageSource, sx: number, sy: number, sw: number, sh: number, dx: number, dy: number, dw: number, dh: number) => void
 
 export type DrawRectParamsType = {

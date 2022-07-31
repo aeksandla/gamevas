@@ -1,5 +1,5 @@
 import {CanvasObject} from "./GameObject";
-import sprite from "../images/sprite.png";
+import sprite from "../images/abyss.png";
 import {withHitbox} from "../HOCs";
 import {ActionTypes, EHitboxShape} from "../common-types";
 
@@ -18,29 +18,29 @@ class _Abyss extends CanvasObject {
       y,
       sprite: {
         imageX: 0,
-        imageY: 408,
+        imageY: 0,
         imageWidth: width,
         imageHeight: height,
-        realImageWidth: 16,
-        realImageHeight: 16,
+        realImageWidth: 1868,
+        realImageHeight: 917,
         hitboxWidth: width,
         hitboxHeight: height,
       },
     };
 
-    this.addEventListener(ActionTypes.MouseOver, () => this.setState(state => ({
-      sprite: {
-        ...state.sprite,
-        imageX: 34,
-      }
-    })));
-
-    this.addEventListener(ActionTypes.MouseOut, () => this.setState(state => ({
-      sprite: {
-        ...state.sprite,
-        imageX: 0,
-      }
-    })));
+    // this.addEventListener(ActionTypes.MouseOver, () => this.setState(state => ({
+    //   sprite: {
+    //     ...state.sprite,
+    //     imageX: 34,
+    //   }
+    // })));
+    //
+    // this.addEventListener(ActionTypes.MouseOut, () => this.setState(state => ({
+    //   sprite: {
+    //     ...state.sprite,
+    //     imageX: 0,
+    //   }
+    // })));
   }
 }
 

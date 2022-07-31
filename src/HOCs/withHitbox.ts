@@ -14,8 +14,8 @@ function drawObjectWithHitbox(shape: EHitboxShape) {
         imageHeight,
         hitboxWidth = imageWidth,
         hitboxHeight = imageHeight,
-        hitboxLeft,
-        hitboxTop,
+        hitboxLeft = 0,
+        hitboxTop = 0,
       },
       x, y,
     } = this.state;

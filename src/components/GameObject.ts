@@ -1,4 +1,4 @@
-import {ActionCallbackType, ActionTypes, MapType, NodeType} from "../common-types";
+import {ActionCallbackType, ActionTypes, MapType} from "../common-types";
 import Canvas from "./Canvas";
 
 export type CanvasObjectSetStateCb<T> = (state: T) => T;
