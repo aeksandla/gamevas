@@ -23,26 +23,26 @@ manCanvas.setObject(abyss6);
 
 const mans = [1, 2, 3, 4].map((_man, index) => new Man({x: 0, y: 6}));
 mans.forEach((man) => {
-  manCanvas.setObject(man);
+    manCanvas.setObject(man);
 });
 
 manCanvas.addEventListener(ECanvasEventType.Click, (e) => {
-  mans.forEach((man, index) => {
-    // @ts-ignore
-    if (document.forms.mansForm.man.value == index+1) man.run({x: e.x, y: e.y});
-  });
+    mans.forEach((man, index) => {
+        // @ts-ignore
+        if (document.forms.mansForm.man.value == index + 1) {
+            man.run({x: e.x, y: e.y});
+        }
+    });
 });
 
 setInterval(() => {
-  const free = Object.values(manCanvas.grid.map).filter(({cost}) => cost === 0);
-  mans.forEach((man) => {
-    if (!man._interval) {
-      const newPosition: NodeType =  free[Math.floor(Math.random() * free.length - 1)];
-      man.run({
-        x: newPosition.x,
-        y: newPosition.y,
-      });
-    }
-  });
+    const free = Object.values(manCanvas.grid.map).filter(({cost}) => cost === 0);
+    mans.forEach((man) => {
+        const newPosition: NodeType = free[Math.floor(Math.random() * free.length - 1)];
+        man.run({
+            x: newPosition.x,
+            y: newPosition.y,
+        });
+    });
 }, 10000)
 
