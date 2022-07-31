@@ -13,8 +13,8 @@ jobs:
         with:
           node-version: '14'
 
-      - run: cd demo && yarn
-      - run: cd demo && yarn github-demo
+      - run: cd example && yarn
+      - run: cd example && yarn github-demo
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
