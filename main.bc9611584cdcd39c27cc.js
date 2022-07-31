@@ -1469,8 +1469,9 @@ mans.forEach(function (man) {
 manCanvas.addEventListener(gamevas_1.ECanvasEventType.Click, function (e) {
     mans.forEach(function (man, index) {
         // @ts-ignore
-        if (document.forms.mansForm.man.value == index + 1)
+        if (document.forms.mansForm.man.value == index + 1) {
             man.run({ x: e.x, y: e.y });
+        }
     });
 });
 setInterval(function () {
@@ -1479,13 +1480,11 @@ setInterval(function () {
         return cost === 0;
     });
     mans.forEach(function (man) {
-        if (!man._interval) {
-            var newPosition = free[Math.floor(Math.random() * free.length - 1)];
-            man.run({
-                x: newPosition.x,
-                y: newPosition.y,
-            });
-        }
+        var newPosition = free[Math.floor(Math.random() * free.length - 1)];
+        man.run({
+            x: newPosition.x,
+            y: newPosition.y,
+        });
     });
 }, 10000);
 
