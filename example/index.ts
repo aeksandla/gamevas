@@ -1,4 +1,4 @@
-import {Game, Man, ORIGIN_PARAMS, Canvas, Abyss, NodeType, ECanvasEventType} from 'go-canvas'
+import {Game, Man, ORIGIN_PARAMS, Canvas, Abyss, NodeType, ECanvasEventType} from 'gamevas'
 
 const backgroundCanvas = new Canvas('background-canvas');
 const game = new Game();

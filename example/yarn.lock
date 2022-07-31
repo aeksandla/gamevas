@@ -2,6 +2,7 @@
 # yarn lockfile v1
 
 
-"go-canvas@link:../dist":
-  version "0.0.0"
-  uid ""
+gamevas@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/gamevas/-/gamevas-0.0.3.tgz#a419fcbfd05dc8847041af4ed03cedea9da62366"
+  integrity sha512-hu+1lRx1hyD0GD6q5YKCICvL15VyIn5IgL8phCbpOzntGoMFdAyZlZvdgkhImY1RbCGTirmppgxPNtC8OXPOKA==

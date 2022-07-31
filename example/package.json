@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "build": "rm -rf ./dist && webpack --watch"
+    "build": "rm -rf ./dist && webpack",
+    "build:watch": "rm -rf ./dist && webpack --watch"
   },
   "dependencies": {
-    "go-canvas": "link:../dist"
+    "gamevas": "^0.0.4"
   },
   "author": "",
   "license": "ISC"

@@ -4,7 +4,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const getEntries = require('./entries');
 
 const root = path.join(__dirname, '..');
-console.log(root);
+
 module.exports = {
     mode: 'production',
     entry: getEntries(path.join(root, 'src'), ''),
@@ -12,7 +12,6 @@ module.exports = {
         path: path.join(root, 'dist'),
         filename: '[name].js',
         libraryTarget: 'commonjs',
-        assetModuleFilename: 'images/[name][ext]',
     },
     optimization: {
         minimize: false,
