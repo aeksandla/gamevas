@@ -1,6 +1,6 @@
 {
   "name": "gamevas",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "scripts": {
     "build": "rm -rf ./dist && webpack --config ./webpack/webpack.config",
     "build:watch": "rm -rf ./dist && webpack --config ./webpack/webpack.config --watch",
