@@ -8,7 +8,7 @@
     "build:watch": "rm -rf ./dist && webpack --watch"
   },
   "dependencies": {
-    "gamevas": "^0.0.5",
+    "gamevas": "^0.0.6",
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.3.1",
     "typescript": "^4.7.4",
