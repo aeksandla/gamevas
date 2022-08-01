@@ -9,7 +9,7 @@ const manCanvas = new Canvas('man-canvas');
 
 const abyss1 = new Abyss({x: 0, y: 10, width: 60, height: 5});
 const abyss2 = new Abyss({x: 20, y: 20, width: 60, height: 5});
-const abyss3 = new Abyss({x: 0, y: 0, width: 71, height: 5});
+const abyss3 = new Abyss({x: 0, y: 0, width: 70, height: 5});
 const abyss4 = new Abyss({x: 51, y: 30, width: 20, height: 5});
 const abyss5 = new Abyss({x: 27, y: 35, width: 20, height: 4});
 const abyss6 = new Abyss({x: 9, y: 30, width: 15, height: 6});

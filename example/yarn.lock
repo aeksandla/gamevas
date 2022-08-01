@@ -542,10 +542,9 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
-gamevas@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/gamevas/-/gamevas-0.0.4.tgz#90f51d7e3217aaecaf0e8287a102b629cb4469d4"
-  integrity sha512-lk4Ds/Q8ug9FaVTOFVit2VJporoPdzUgJwhpEpdZAlJ9FfvSNy7aRN5oyEqP+BJo6ZbAuP6Zur2PlHmO1YMj4Q==
+"gamevas@link:../dist":
+  version "0.0.0"
+  uid ""
 
 glob-to-regexp@^0.4.1:
   version "0.4.1"

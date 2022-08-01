@@ -30,10 +30,20 @@ export class Grid extends CanvasObject {
   drawCell = (canvas: Canvas) => (params: {x: number; y: number, strokeStyle?: string}) => {
     const object = new Path2D();
     canvas.context.fillStyle = 'transparent';
-    canvas.context.strokeStyle = params.strokeStyle || '#8292ff';
+    canvas.context.strokeStyle = params.strokeStyle || 'rgba(0,0,255,0.1)';
     object.rect(params.x * this.width, params.y * this.height, this.width, this.height);
     canvas.context.stroke(object);
     canvas.context.fill(object);
+
+    if (Game.isShowGrid) {
+      const x = (params.x);
+      const y = (params.y);
+      if ((x % 5 === 0 && y === 0) || (y % 5 === 0 && x === 0)) {
+        canvas.context.fillStyle = "#00F";
+        canvas.context.font = "10pt Arial";
+        canvas.context.fillText((x || y).toString(), x * this.width, y * this.height + this.height/2);
+      }
+    }
   }
 
   draw = (canvas: Canvas) => {

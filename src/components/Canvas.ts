@@ -18,10 +18,12 @@ export class Canvas {
   private objects: any[] = [];
   private isRerender = true;
   grid: Grid;
+  position;
 
   constructor(id: string) {
     this.canvas = <HTMLCanvasElement>document.getElementById(id);
     if (!this.canvas) throw new Error('Canvas не найден');
+    this.position =  this.canvas.getBoundingClientRect();
     this.context = this.canvas.getContext('2d');
     this.setCanvasSize();
     this.grid = new Grid();
@@ -190,7 +192,7 @@ export class Canvas {
   }
 
   getCoordinate = (e: MouseEvent, type: 'x' | 'y') => {
-    return (e[type] - this.canvas.getBoundingClientRect()[type]) * Game.scale;
+    return (e[type] - this.position[type]) * Game.scale;
   }
 
   addEventListener = (type: ECanvasEventType, listener: (e: {naturalEvent: Event, x: number, y: number}) => void) => {
