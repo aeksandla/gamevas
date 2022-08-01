@@ -190,14 +190,19 @@ export class Canvas {
   }
 
   getCoordinate = (e: MouseEvent, type: 'x' | 'y') => {
-    return (e[type] - this.canvas.getBoundingClientRect()[type]) * Game.scale;
+    const scroll = type === 'x' ? window.scrollX : window.scrollY;
+    return (e[type] + scroll - (this.canvas.getBoundingClientRect()[type] + scroll)) * Game.scale;
   }
 
   addEventListener = (type: ECanvasEventType, listener: (e: {naturalEvent: Event, x: number, y: number}) => void) => {
     switch (type) {
       case ECanvasEventType.Click: {
         this.canvas.addEventListener('click', (e) => {
-          listener({naturalEvent: e, x: Math.floor(this.getCoordinate(e, 'x') / this.grid.width), y: Math.floor(this.getCoordinate(e, 'y') / this.grid.height)});
+          listener({
+            naturalEvent: e,
+            x: Math.floor(this.getCoordinate(e, 'x') / this.grid.width),
+            y: Math.floor(this.getCoordinate(e, 'y') / this.grid.height),
+          });
         })
         break;
       }
