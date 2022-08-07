@@ -78,6 +78,7 @@ export class Canvas {
       }
       this.isRerender = true;
     };
+    object.destroy = () => this.removeObject(object);
     this.isRerender = true;
   };
 

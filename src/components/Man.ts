@@ -6,13 +6,13 @@ const manSprite = new Image(935, 1133);
 manSprite.src = sprite;
 
 const manStaticValues = {
-  imageWidth: 6,
-  imageHeight: 7,
+  imageWidth: 5,
+  imageHeight: 6,
   realImageWidth: 233.75,
   realImageHeight: 283.25,
-  hitboxWidth: 3,
+  hitboxWidth: 2,
   hitboxHeight: 1,
-  hitboxTop: 6,
+  hitboxTop: 5,
   hitboxLeft: 1,
 };
 
@@ -21,7 +21,7 @@ class _Man extends CanvasObject {
   sprite = manSprite;
   gridColor = 'red';
 
-  constructor({x, y}: { x: number; y: number; }) {
+  constructor({x, y}: { x: number; y: number;}) {
     super();
     this.id = `man`
     this.state = {

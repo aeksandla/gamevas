@@ -20,6 +20,7 @@ export class CanvasObject<T = Record<string, any>> {
   map: MapType = {};
   id: string | number = -1;
   gridColor = 'black';
+  destroy: () => void;
 
   isCb = (arg: CanvasObjectSetState<T>): arg is CanvasObjectSetStateCb<T> => typeof arg === 'function';
 }

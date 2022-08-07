@@ -1,4 +1,13 @@
-import {Game, Man, ORIGIN_PARAMS, Canvas, Abyss, NodeType, ECanvasEventType} from 'gamevas'
+import {Game, Man, ORIGIN_PARAMS, Canvas, NodeType, ECanvasEventType, Stone, StoneSize} from 'gamevas'
+
+const getRandomPosition = () => {
+    const free = Object.values(manCanvas.grid.map).filter(({cost}) => cost === 0);
+    return free[Math.floor(Math.random() * free.length - 1)];
+}
+const getRandomStoneSize = () => {
+    const sizes = [StoneSize.M, StoneSize.L, StoneSize.S, StoneSize.Xs];
+    return sizes[Math.floor(Math.random() * 4)];
+}
 
 const backgroundCanvas = new Canvas('background-canvas');
 const game = new Game();
@@ -7,21 +16,14 @@ Game.scale = ORIGIN_PARAMS.canvasWidth / backgroundCanvas.canvas.getBoundingClie
 
 const manCanvas = new Canvas('man-canvas');
 
-const abyss1 = new Abyss({x: 0, y: 10, width: 60, height: 5});
-const abyss2 = new Abyss({x: 20, y: 20, width: 60, height: 5});
-const abyss3 = new Abyss({x: 0, y: 0, width: 70, height: 5});
-const abyss4 = new Abyss({x: 51, y: 30, width: 20, height: 5});
-const abyss5 = new Abyss({x: 27, y: 35, width: 20, height: 4});
-const abyss6 = new Abyss({x: 9, y: 30, width: 15, height: 6});
+const stones = [...(new Array(20))].map(() => {
+    const position = getRandomPosition();
+    const s = new Stone({x: position.x, y: position.y, size: getRandomStoneSize()});
+    manCanvas.setObject(s);
+    return s;
+});
 
-manCanvas.setObject(abyss1);
-manCanvas.setObject(abyss2);
-manCanvas.setObject(abyss3);
-manCanvas.setObject(abyss4);
-manCanvas.setObject(abyss5);
-manCanvas.setObject(abyss6);
-
-const mans = [1, 2, 3, 4].map((_man, index) => new Man({x: 0, y: 6}));
+const mans = [1, 2, 3, 4].map(() => new Man({x: 0, y: 6}));
 mans.forEach((man) => {
     manCanvas.setObject(man);
 });
