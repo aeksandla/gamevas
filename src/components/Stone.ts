@@ -2,6 +2,8 @@ import {CanvasObject} from "./GameObject";
 import sprite from "../images/stone.png";
 import {withHitbox} from "../HOCs/withHitbox";
 import {ActionTypes} from "../common-types";
+import Inventory from "./Inventory";
+import {stone} from './Resource';
 
 const stoneSprite = new Image(620, 280);
 stoneSprite.src = sprite;
@@ -57,7 +59,11 @@ const sizes = {
 class _Stone extends CanvasObject {
     private sprite = stoneSprite;
     id = 'stone';
-    lifeStages = [StoneSize.L, StoneSize.M, StoneSize.S];
+    lifeStages = [
+        {size: StoneSize.L, drop: 7, cost: 55},
+        {size: StoneSize.M, drop: 5, cost: 35},
+        {size: StoneSize.S, drop: 3, cost: 15},
+    ];
     size: StoneSize;
 
     constructor({x, y, size = StoneSize.M}: { x: number; y: number, size: StoneSize}) {
@@ -73,13 +79,24 @@ class _Stone extends CanvasObject {
     }
 
     break = () => {
-        if (this.size === StoneSize.S) this.destroy();
-        this.size = this.lifeStages[this.lifeStages.findIndex(item => item === this.size) + 1];
+        this.addToInventory();
+        if (this.size === StoneSize.S) {
+            this.destroy();
+            return;
+        }
+        const currentIndex = this.lifeStages.findIndex(item => item.size === this.size);
+        this.size = this.lifeStages[currentIndex + 1].size;
         this.setState({
             sprite: {
                 ...sizes[this.size],
             },
-        })
+        });
+        console.log((new Inventory()).data);
+    }
+
+    addToInventory = () => {
+        const current = this.lifeStages.find(item => item.size === this.size);
+        (new Inventory()).addItem(stone, current.drop);
     }
 }
 

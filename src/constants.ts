@@ -4,3 +4,6 @@ export const ORIGIN_PARAMS = {
     gridCellWidth: 20,
     gridCellHeight: 20,
 };
+
+export const libraryPrefixClass = '.gamevas';
+export const libraryPrefix = 'gamevas';

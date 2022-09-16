@@ -10,10 +10,12 @@
     "esModuleInterop": true,
     "declaration": true,
     "declarationDir": "./dist",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "jsx": "preserve"
   },
   "include": [
     "./src",
-    "types.d.ts"
+    "types.d.ts",
+    "node_modules/@types/react"
   ]
 }

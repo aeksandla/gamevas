@@ -44,6 +44,20 @@ module.exports = {
                 ],
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
             },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    "style-loader",
+                    "css-loader",
+                    "sass-loader",
+                ],
+            },
+            {
+                test: /\.tsx$/,
+                use: {
+                    loader: 'babel-loader',
+                }
+            }
         ],
     },
 }

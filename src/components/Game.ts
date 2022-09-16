@@ -1,3 +1,7 @@
+import Inventory from "./Inventory";
+import InventoryView from "./InventoryView";
+import inventory from "./Inventory";
+
 export class Game {
     static scale: number;
     static isShowHitbox: boolean;
@@ -11,6 +15,16 @@ export class Game {
         }
 
         return Game.instance;
+    }
+
+    onInitInventory = () => this.drawInventoryMenu();
+
+    initInventory = () => new Inventory(this.onInitInventory);
+
+    drawInventoryMenu = () => {
+        const inventoryView = new InventoryView();
+        const inventory = Inventory.instance.getData();
+        const menu = inventoryView.getInventoryMenu(inventory);
     }
 
     showToolbox = (root?: string) => {

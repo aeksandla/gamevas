@@ -5,3 +5,5 @@ export * from './Man';
 export * from './Abyss';
 export * from './Grid';
 export * from './Stone';
+export * from './Inventory';
+export * from './InventoryView';

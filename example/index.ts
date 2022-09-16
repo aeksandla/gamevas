@@ -1,4 +1,4 @@
-import {Game, Man, ORIGIN_PARAMS, Canvas, NodeType, ECanvasEventType, Stone, StoneSize} from 'gamevas'
+import {Game, Man, ORIGIN_PARAMS, Canvas, NodeType, Inventory, Stone, StoneSize, InventoryView} from 'gamevas'
 
 const getRandomPosition = () => {
     const free = Object.values(manCanvas.grid.map).filter(({cost}) => cost === 0);
@@ -13,6 +13,8 @@ const backgroundCanvas = new Canvas('background-canvas');
 const game = new Game();
 game.showToolbox();
 Game.scale = ORIGIN_PARAMS.canvasWidth / backgroundCanvas.canvas.getBoundingClientRect().width;
+new Inventory();
+new InventoryView();
 
 const manCanvas = new Canvas('man-canvas');
 
@@ -28,14 +30,14 @@ mans.forEach((man) => {
     manCanvas.setObject(man);
 });
 
-manCanvas.addEventListener(ECanvasEventType.Click, (e) => {
-    mans.forEach((man, index) => {
-        // @ts-ignore
-        if (document.forms.mansForm.man.value == index + 1) {
-            man.run({x: e.x, y: e.y});
-        }
-    });
-});
+// manCanvas.addEventListener(ECanvasEventType.Click, (e) => {
+//     mans.forEach((man, index) => {
+//         // @ts-ignore
+//         if (document.forms.mansForm.man.value == index + 1) {
+//             man.run({x: e.x, y: e.y});
+//         }
+//     });
+// });
 
 setInterval(() => {
     const free = Object.values(manCanvas.grid.map).filter(({cost}) => cost === 0);
