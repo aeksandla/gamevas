@@ -1,6 +1,6 @@
-import {Game, Man, ORIGIN_PARAMS, Canvas, NodeType, Inventory, Stone, StoneSize, InventoryView} from 'gamevas'
+import {Game, Man, ORIGIN_PARAMS, Canvas, NodeType, Stone, StoneSize} from 'gamevas'
 
-const getRandomPosition = () => {
+const getRandomPosition = (): {x: number; y: number} => {
     const free = Object.values(manCanvas.grid.map).filter(({cost}) => cost === 0);
     return free[Math.floor(Math.random() * free.length - 1)];
 }
@@ -12,9 +12,10 @@ const getRandomStoneSize = () => {
 const backgroundCanvas = new Canvas('background-canvas');
 const game = new Game();
 game.showToolbox();
+game.initInventory();
+game.showInterface();
 Game.scale = ORIGIN_PARAMS.canvasWidth / backgroundCanvas.canvas.getBoundingClientRect().width;
-new Inventory();
-new InventoryView();
+
 
 const manCanvas = new Canvas('man-canvas');
 

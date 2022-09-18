@@ -29,7 +29,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
+                test: /\.ts$/,
                 loader: 'ts-loader',
                 exclude: /node_modules/,
                 options: {
@@ -54,8 +54,9 @@ module.exports = {
             },
             {
                 test: /\.tsx$/,
-                use: {
-                    loader: 'babel-loader',
+                loader: 'babel-loader',
+                options: {
+                    presets: ["@babel/preset-typescript"],
                 }
             }
         ],

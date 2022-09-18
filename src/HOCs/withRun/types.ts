@@ -4,7 +4,7 @@ export type IChangeStateFields = ({dX, dY, isLast}: { dX: number; dY: number, is
 
 export type IRunContext = (changeStateFields: IChangeStateFields) => IRun;
 
-export type IRun = ({x: toX, y: toY}: { x: number; y: number; }) => void
+export type IRun = ({x, y}: { x: number; y: number; }) => void
 
 export enum ERunType {
   Diagonal = 'diagonal',

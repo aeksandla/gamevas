@@ -11,7 +11,7 @@
     "declaration": true,
     "declarationDir": "./dist",
     "outDir": "./dist",
-    "jsx": "preserve"
+    "jsx": "preserve",
   },
   "include": [
     "./src",

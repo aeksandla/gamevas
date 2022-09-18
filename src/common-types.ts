@@ -45,3 +45,13 @@ export enum EHitboxShape {
   Rect = 'rect',
   Ellipse = 'ellipse',
 }
+
+export interface IResource {
+    name: string;
+    id: Resource;
+    image: string;
+}
+
+export enum Resource {
+    Stone = 'stone',
+}

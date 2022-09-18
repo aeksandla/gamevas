@@ -3,7 +3,7 @@ import sprite from "../images/stone.png";
 import {withHitbox} from "../HOCs/withHitbox";
 import {ActionTypes} from "../common-types";
 import Inventory from "./Inventory";
-import {stone} from './Resource';
+import {Resource} from './../common-types';
 
 const stoneSprite = new Image(620, 280);
 stoneSprite.src = sprite;
@@ -60,9 +60,9 @@ class _Stone extends CanvasObject {
     private sprite = stoneSprite;
     id = 'stone';
     lifeStages = [
-        {size: StoneSize.L, drop: 7, cost: 55},
-        {size: StoneSize.M, drop: 5, cost: 35},
-        {size: StoneSize.S, drop: 3, cost: 15},
+        {size: StoneSize.L, cost: 55, drop: [{id: Resource.Stone, count: 7}]},
+        {size: StoneSize.M, cost: 35, drop: [{id: Resource.Stone, count: 5}]},
+        {size: StoneSize.S, cost: 15, drop: [{id: Resource.Stone, count: 3}]},
     ];
     size: StoneSize;
 
@@ -91,12 +91,13 @@ class _Stone extends CanvasObject {
                 ...sizes[this.size],
             },
         });
-        console.log((new Inventory()).data);
     }
 
     addToInventory = () => {
         const current = this.lifeStages.find(item => item.size === this.size);
-        (new Inventory()).addItem(stone, current.drop);
+        current.drop.forEach(dropItem => {
+            Inventory.instance.addItem(dropItem.id, dropItem.count);
+        });
     }
 }
 

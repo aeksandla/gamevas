@@ -1,44 +1,59 @@
 import '../styles/inventory.scss';
-import {ResourceId, stone} from "./Resource";
+import {IResource, Resource} from "./../common-types";
 
-const defaultResources = {
-    [stone.id]: stone,
-};
+interface ConstructorArgs {
+    onInit?: () => void;
+    onUpdate?: () => void;
+    resources: Array<IResource>;
+}
+
+export type InventoryData = Partial<Record<Resource, number>>;
 
 export class Inventory {
     static instance: Inventory;
-    data: Record<ResourceId, number> = {};
-    resources = defaultResources;
-    onUpdateCb: (id: ResourceId, count: number) => void;
+    private data: InventoryData = {};
+    onUpdate: (id: Resource, count: number) => void;
+    resources: Array<IResource> = [];
 
-    constructor(onInitCb: () => void = () => {}, onUpdateCb: () => void = () => {},) {
+    constructor(args: ConstructorArgs) {
         if (!Inventory.instance) {
+            const {
+                resources,
+                onUpdate = () => null
+            } = args;
+
             Inventory.instance = this;
-            onInitCb();
-            this.onUpdateCb = onUpdateCb;
+            this.resources = resources;
+            this.onUpdate = onUpdate;
+            this.init();
         }
 
         return Inventory.instance;
     }
 
-    addItem = (id: ResourceId, count: number) => {
+    readonly addItem = (id: Resource, count: number) => {
         const data = this.getData();
         if (data[id]) {
             this.updateData(id, data[id] + count);
-            this.onUpdateCb(id, data[id] + count);
+            this.onUpdate(id, data[id] + count);
         } else {
             this.updateData(id, count);
-            this.onUpdateCb(id, count);
+            this.onUpdate(id, count);
         }
     }
 
-    removeItem = (id: ResourceId, count: number) => {
+    readonly removeItem = (id: Resource, count: number) => {
         if (!this.data[id] || this.data[id] < count) throw new Error(`${id} в инвентаре нет или меньше чем нужно забрать`);
         this.addItem(id, -count);
     }
 
+    init = () => {
+        this.resources.forEach(resource => {
+            this.addItem(resource.id, 0);
+        })
+    }
     getData = () => this.data;
-    updateData = (id: ResourceId, count: number) => this.data[id] = count;
+    updateData = (id: Resource, count: number) => this.data[id] = count;
 
 
 }

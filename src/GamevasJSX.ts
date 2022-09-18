@@ -48,7 +48,7 @@ type Tag = string | ((props: any, children: any[]) => HTMLElement);
 type Props = Record<string, string> | null;
 type Children = (Node | string)[];
 
-export const createElement = (tag: Tag, props: Props, ...children: Children): HTMLElement => {
+export function createElement(tag: Tag, props: Props, ...children: Children): HTMLElement {
     if (typeof tag === 'function') {
         return tag({ ... props }, children);
     }
@@ -72,4 +72,6 @@ export const createElement = (tag: Tag, props: Props, ...children: Children): HT
     return el;
 };
 
-export default {createElement};
+export const fragment = () => document.createElement('div');
+
+export default {createElement, fragment};

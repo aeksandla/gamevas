@@ -3,7 +3,8 @@
     [
       "@babel/plugin-transform-react-jsx",
       {
-        "pragma": "GamevasJSX.createElement"
+        "pragma": "GamevasJSX.createElement",
+        "pragmaFrag": "GamevasJSX.fragment"
       }
     ]
   ]
