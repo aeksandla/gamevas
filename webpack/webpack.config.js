@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
+const webpack = require('webpack');
 
 const getEntries = require('./entries');
 
@@ -25,6 +26,9 @@ module.exports = {
                 {from: path.join(root, 'types.d.ts'), to: path.join(root, 'dist', 'types.d.ts')},
             ],
         }),
+        new webpack.ProvidePlugin({
+            GamevasJSX: path.join(root, 'src', 'GamevasJSX.ts')
+        })
     ],
     module: {
         rules: [

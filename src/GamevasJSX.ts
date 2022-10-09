@@ -70,7 +70,7 @@ export function createElement(tag: Tag, props: Props, ...children: Children): HT
     });
 
     return el;
-};
+}
 
 export const fragment = () => document.createElement('div');
 

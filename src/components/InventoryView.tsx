@@ -1,5 +1,4 @@
 import {libraryPrefix} from "../constants";
-import GamevasJSX from "../GamevasJSX";
 import {Resource, IResource} from "./../common-types";
 import Inventory, {InventoryData} from "./Inventory";
 
